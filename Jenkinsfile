@@ -2,6 +2,9 @@ pipeline {
   agent {
     label 'ubuntu'
   }
+    environment {
+credentials = "${JSON}"
+    }
    stages {
       stage('terraform init') {
         steps {
