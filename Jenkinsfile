@@ -3,7 +3,7 @@ pipeline {
     label 'ubuntu'
   }
     environment {
-credentials = ${JSON}
+credentials = "${JSON}"
     }
    stages {
       stage('terraform init') {
