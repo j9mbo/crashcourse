@@ -3,10 +3,10 @@ pipeline {
     label 'ubuntu'
   }
    stages {
-      stage('Hello') {
-         steps {
-            echo 'Hello World'
-            sh "ls -lsa"
+      stage('terraform init') {
+         steps 
+            sh "terraform init"
+            sh "terraform plan"
          }
       }
    }
