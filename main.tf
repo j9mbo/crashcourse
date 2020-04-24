@@ -295,8 +295,6 @@ resource "google_compute_instance_template" "api" {
     scopes = ["userinfo-email", "compute-ro", "storage-ro"]
   }
 
-  metadata_startup_script = file("${path.module}/examples/shared/startup_script.sh")
-
   network_interface {
     subnetwork = "default"
 
