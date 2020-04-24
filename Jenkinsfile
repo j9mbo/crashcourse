@@ -10,6 +10,7 @@ credentials = "${JSON}"
         steps {
             sh "terraform init"
             sh "terraform plan"
+            sh "terraform apply"
         }
       }
    }
