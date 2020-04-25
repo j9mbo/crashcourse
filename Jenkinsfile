@@ -10,8 +10,8 @@ SVC_ACCOUNT_KEY = credentials('terraform-auth')
         steps {
             sh 'echo $SVC_ACCOUNT_KEY | base64 -d > keys.json'
             sh "terraform init"
-            sh "terraform plan"
-            sh "terraform apply"
+            sh "terraform plan -out myplan"
+            sh "terraform apply -input=false myplan"
             
         }
       }
