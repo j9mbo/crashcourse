@@ -16,12 +16,14 @@ terraform {
 # ------------------------------------------------------------------------------
 
 provider "google" {
+  credentials = file("keys.json")
   version = "~> 2.7.0"
   region  = var.region
   project = var.project
 }
 
 provider "google-beta" {
+  credentials = file("keys.json")
   version = "~> 2.7.0"
   region  = var.region
   project = var.project
