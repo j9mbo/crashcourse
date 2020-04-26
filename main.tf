@@ -1,13 +1,5 @@
-# ---------------------------------------------------------------------------------------------------------------------
-# LAUNCH A LOAD BALANCER WITH INSTANCE GROUP AND STORAGE BUCKET BACKEND
-#
-# This is an example of how to use the http-load-balancer module to deploy a HTTP load balancer
-# with multiple backends and optionally ssl and custom domain.
-# ---------------------------------------------------------------------------------------------------------------------
-
 terraform {
-  # The modules used in this example have been updated with 0.12 syntax, which means the example is no longer
-  # compatible with any versions below 0.12.
+
   required_version = ">= 0.12"
 }
 
@@ -102,7 +94,7 @@ resource "google_compute_backend_service" "api" {
 
 resource "google_compute_health_check" "default" {
   project = var.project
-  name    = "${var.name}-hc"
+  name    = "${var.name}-hc1"
 
   http_health_check {
     port         = 5000
@@ -320,7 +312,7 @@ resource "google_compute_firewall" "firewall" {
 
   # Allow load balancer access to the API instances
   # https://cloud.google.com/load-balancing/docs/https/#firewall_rules
-  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  source_ranges = ["0.0.0.0/0"]
 
   target_tags = ["private-app"]
   source_tags = ["private-app"]

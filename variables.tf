@@ -6,7 +6,7 @@
 variable "project" {
   description = "The project ID to create the resources in."
   type        = string
-  default = "my-project-21-272011"
+  default = "careful-lock-271320"
 }
 
 variable "region" {
