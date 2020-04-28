@@ -85,7 +85,7 @@ resource "google_compute_backend_service" "api" {
 
   health_checks = [google_compute_health_check.default.self_link]
 
-  depends_on = [google_compute_instance_group_manager.default]
+  depends_on = [google_compute_instance_group_manager.api]
 }
 
 # ------------------------------------------------------------------------------
@@ -93,16 +93,17 @@ resource "google_compute_backend_service" "api" {
 # ------------------------------------------------------------------------------
 
 resource "google_compute_health_check" "default" {
-  name = "tcp-health-check"
+  project = var.project
+  name    = "${var.name}-hc"
 
-  timeout_sec        = 1
-  check_interval_sec = 1
-
-  tcp_health_check {
-    port = "80"
+  http_health_check {
+    port         = 5000
+    request_path = "/api"
   }
-}
 
+  check_interval_sec = 300
+  timeout_sec        = 300
+}
 
 # ------------------------------------------------------------------------------
 # CREATE THE STORAGE BUCKET FOR THE STATIC CONTENT
@@ -111,7 +112,7 @@ resource "google_compute_health_check" "default" {
 resource "google_storage_bucket" "static" {
   project = var.project
 
-  name          = "${var.name}-bucket"
+  name          = "${var.name}-bucket-1"
   location      = var.static_content_bucket_location
   storage_class = "MULTI_REGIONAL"
 
@@ -221,13 +222,12 @@ resource "google_compute_ssl_certificate" "certificate" {
 # We use the instance group only to highlight the ability to specify multiple types
 # of backends for the load balancer
 # ------------------------------------------------------------------------------
-
 resource "google_compute_autoscaler" "default" {
   provider = google-beta
 
   name   = "${var.name}-autoscaler"
   zone   = var.zone
-  target = google_compute_instance_group_manager.default.self_link
+  target = google_compute_instance_group_manager.api.self_link
 
   autoscaling_policy {
     max_replicas    = 5
@@ -240,18 +240,17 @@ resource "google_compute_autoscaler" "default" {
   }
 }
 
-resource "google_compute_instance_group_manager" "default" {
+resource "google_compute_instance_group_manager" "api" {
   provider  = google-beta
   project   = var.project
   name      = "${var.name}-instance-group"
   zone      = var.zone
 
+
   version {
     instance_template = google_compute_instance_template.api.self_link
     name              = "primary"
   }
-
-  target_pools = ["${google_compute_target_pool.template.self_link}"]
 
   lifecycle {
     create_before_destroy = true
@@ -260,12 +259,12 @@ resource "google_compute_instance_group_manager" "default" {
   base_instance_name = "autoscaler-sample"
   named_port {
     name = "http"
-    port = 5000
+    port = 80
   }
 
   auto_healing_policies {
     health_check      = google_compute_health_check.default.self_link
-    initial_delay_sec = 60
+    initial_delay_sec = 360
   }
 }
 
@@ -300,10 +299,6 @@ resource "google_compute_instance_template" "api" {
 # CREATE A FIREWALL TO ALLOW ACCESS FROM THE LB TO THE INSTANCE
 # ------------------------------------------------------------------------------
 
-resource "google_compute_target_pool" "template" {
-  name = "template"
-}
-
 resource "google_compute_firewall" "firewall" {
   project = var.project
   name    = "${var.name}-fw"
@@ -311,7 +306,7 @@ resource "google_compute_firewall" "firewall" {
 
   # Allow load balancer access to the API instances
   # https://cloud.google.com/load-balancing/docs/https/#firewall_rules
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
 
   target_tags = ["private-app"]
   source_tags = ["private-app"]
@@ -320,5 +315,6 @@ resource "google_compute_firewall" "firewall" {
     protocol = "tcp"
     ports    = ["5000"]
   }
+
 }
 

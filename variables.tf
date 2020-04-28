@@ -5,7 +5,7 @@
 variable "project" {
   description = "The project ID to create the resources in."
   type        = string
-  default = "careful-lock-271320"
+  default = "teraform-autoscaler"
 }
 
 variable "region" {
