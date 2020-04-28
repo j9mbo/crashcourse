@@ -83,7 +83,7 @@ resource "google_compute_backend_service" "api" {
   timeout_sec = 10
   enable_cdn  = false
 
-  health_checks = [google_compute_health_check.default.self_link]
+  health_checks = [google_compute_http_health_check.default.self_link]
 
   depends_on = [google_compute_instance_group_manager.default]
 }
@@ -92,17 +92,12 @@ resource "google_compute_backend_service" "api" {
 # CONFIGURE HEALTH CHECK FOR THE API BACKEND
 # ------------------------------------------------------------------------------
 
-resource "google_compute_health_check" "default" {
-  project = var.project
-  name    = "${var.name}-hc1"
+resource "google_compute_http_health_check" "default" {
+  name         = "authentication-health-check"
+  request_path = "/health_check"
 
-  http_health_check {
-    port         = 5000
-    request_path = "/api"
-  }
-
-  check_interval_sec = 5
-  timeout_sec        = 5
+  timeout_sec        = 1
+  check_interval_sec = 1
 }
 
 # ------------------------------------------------------------------------------
@@ -265,7 +260,7 @@ resource "google_compute_instance_group_manager" "default" {
   }
 
   auto_healing_policies {
-    health_check      = google_compute_health_check.default.self_link
+    health_check      = google_compute_http_health_check.default.self_link
     initial_delay_sec = 60
   }
 }
