@@ -83,7 +83,7 @@ resource "google_compute_backend_service" "api" {
   timeout_sec = 10
   enable_cdn  = false
 
-  health_checks = [google_compute_http_health_check.default.self_link]
+  health_checks = [google_compute_health_check.default.self_link]
 
   depends_on = [google_compute_instance_group_manager.default]
 }
@@ -92,13 +92,17 @@ resource "google_compute_backend_service" "api" {
 # CONFIGURE HEALTH CHECK FOR THE API BACKEND
 # ------------------------------------------------------------------------------
 
-resource "google_compute_http_health_check" "default" {
-  name         = "authentication-health-check-2"
-  request_path = "/health_check"
+resource "google_compute_health_check" "tcp-health-check" {
+  name = "tcp-health-check"
 
   timeout_sec        = 1
   check_interval_sec = 1
+
+  tcp_health_check {
+    port = "80"
+  }
 }
+
 
 # ------------------------------------------------------------------------------
 # CREATE THE STORAGE BUCKET FOR THE STATIC CONTENT
@@ -260,7 +264,7 @@ resource "google_compute_instance_group_manager" "default" {
   }
 
   auto_healing_policies {
-    health_check      = google_compute_http_health_check.default.self_link
+    health_check      = google_compute_health_check.default.self_link
     initial_delay_sec = 60
   }
 }
