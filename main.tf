@@ -93,7 +93,7 @@ resource "google_compute_backend_service" "api" {
 # ------------------------------------------------------------------------------
 
 resource "google_compute_http_health_check" "default" {
-  name         = "authentication-health-check-1"
+  name         = "authentication-health-check-2"
   request_path = "/health_check"
 
   timeout_sec        = 1
