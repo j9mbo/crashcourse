@@ -92,7 +92,7 @@ resource "google_compute_backend_service" "api" {
 # CONFIGURE HEALTH CHECK FOR THE API BACKEND
 # ------------------------------------------------------------------------------
 
-resource "google_compute_health_check" "tcp-health-check" {
+resource "google_compute_health_check" "default" {
   name = "tcp-health-check"
 
   timeout_sec        = 1

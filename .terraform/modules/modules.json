@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"lb","Source":"./modules/http-load-balancer","Dir":"modules/http-load-balancer"}]}
+{"Modules":[{"Key":"lb","Source":"./modules/http-load-balancer","Dir":"modules/http-load-balancer"},{"Key":"","Source":"","Dir":"."}]}
