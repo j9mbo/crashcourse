@@ -2,14 +2,13 @@ pipeline {
   agent {
     label 'ubuntu'
   }
-    environment {
-SVC_ACCOUNT_KEY = credentials('terraform-auth')
-    }
    stages {
       stage('terraform init') {
         steps {
-            sh 'echo $SVC_ACCOUNT_KEY | base64 -d > keys.json'
             sh "terraform init -input=false"
+            sh "export AWS_ACCESS_KEY_ID=$AWSAccessKeyId"
+            sh "export AWS_SECRET_ACCESS_KEY=$AWSSecretKey"
+            sh "export AWS_DEFAULT_REGION=us-west-2"
             sh "terraform plan -out=tfplan -input=false "
             sh "terraform apply -input=false tfplan"
             
