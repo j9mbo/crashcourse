@@ -3,10 +3,6 @@ terraform {
   required_version = ">= 0.12"
 }
 
-# ------------------------------------------------------------------------------
-# CONFIGURE OUR GCP CONNECTION
-# ------------------------------------------------------------------------------
-
 provider "google" {
   credentials = file("keys.json")
   version = "~> 2.7.0"
@@ -78,11 +74,6 @@ resource "google_compute_target_https_proxy" "default" {
 }
 
 
-
-# ------------------------------------------------------------------------------
-# CONFIGURE HEALTH CHECK FOR THE API BACKEND
-# ------------------------------------------------------------------------------
-
 resource "google_compute_http_health_check" "default" {
   name = "tcp-health-check-3"
 
@@ -92,10 +83,6 @@ resource "google_compute_http_health_check" "default" {
   unhealthy_threshold = 5
   port = 80
 }
-
-# ------------------------------------------------------------------------------
-# CREATE THE STORAGE BUCKET FOR THE STATIC CONTENT
-# ------------------------------------------------------------------------------
 
 resource "google_compute_url_map" "default" {
   name            = "${var.name}-global-pcf"
@@ -155,8 +142,6 @@ resource "google_compute_instance_group_manager" "api" {
     min_ready_sec = 0
   }
 
-
-  
   version {
     instance_template = google_compute_instance_template.api.self_link
     name              = "primary"
@@ -205,10 +190,6 @@ resource "google_compute_instance_template" "api" {
     }
   }
 }
-
-# ------------------------------------------------------------------------------
-# CREATE A FIREWALL TO ALLOW ACCESS FROM THE LB TO THE INSTANCE
-# ------------------------------------------------------------------------------
 
 resource "google_compute_firewall" "firewall" {
   project = var.project
