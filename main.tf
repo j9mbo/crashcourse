@@ -177,7 +177,7 @@ resource "google_compute_instance_template" "api" {
   }
 
   metadata = {
-   ssh-keys = "romanshpurko2988:${file("~/.ssh/id_rsa.pub")}"
+   ssh-keys = "vitaliy.molnar:${file("~/.ssh/id_rsa.pub")}"
   }
 
   service_account {
