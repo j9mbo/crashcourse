@@ -1,0 +1,85 @@
+
+ - name: Installing prerequisites
+   apt: update_cache=yes force_apt_get=yes
+
+ - name: Installing apache2 web server
+   become: true
+   apt: pkg=apache2 state=present
+
+ - name: Installing package MySQL
+   apt: pkg={{ item }} state=present 
+   with_items: 
+     -  mysql-server
+     -  mysql-client
+     -  python-mysqldb
+
+ - name: Create mysql database
+   become: true
+   mysql_db: name={{ item }} state=present
+   with_items:
+      - mr
+      - mt
+      - nk
+      - ns
+      - rs
+      - sv
+      - ts
+
+ - name: Create database user with name 'root' with all database privileges
+   mysql_user:
+     user=wordpress
+     password=!Kappa1337
+     host=localhost
+     state=present
+     update_password=on_create
+     login_unix_socket=/var/run/mysqld/mysqld.sock
+     append_privs=yes
+     priv="{{ item }}.*:ALL"
+   with_items:
+      - mr
+      - mt
+      - nk
+      - ns
+      - rs
+      - sv
+      - ts
+  
+ - name: Installing php and extensions
+   become: true
+   apt: pkg={{ item }} state=present
+   with_items:
+      - php
+      - libapache2-mod-php
+      - php7.0-mysql
+      - php7.0-xml
+      - php7.0-gd
+      - php7.0-curl
+      - php7.0-mbstring
+      - php7.0-xmlrpc
+      - php7.0-intl
+      - php7.0-soap
+      - php7.0-zip
+
+ - name: Installing package GIT
+   apt: pkg=git state=present
+
+ - name: Ansible delete file example
+   file:
+     path: /var/www/html/index.html
+     state: absent
+
+ - name: Adding repository NoviNano on VM
+   git:
+     repo=https://github.com/j9mbo/NoviNano.git
+     dest=/var/www/html
+
+ - name: Copy file with owner and permissions
+   copy:
+     src: ~/files/index.html
+     dest: /var/www/html
+
+ - name: Restart service Apache2, in all cases
+   service:
+      name: apache2
+      state: restarted
+
