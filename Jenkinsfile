@@ -25,7 +25,7 @@ pipeline {
       post {
      
         success {
-            sh 'curl -s -X POST https://api.telegram.org/bot1170047758:AAEiBItYQUnpvYgAyPNGVIHL_MIcUQU7BKU/sendMessage -d chat_id="-458684504" -d text="the job succeeded"'
+            sh 'curl -s -X POST https://api.telegram.org/bot1170047758:AAEiBItYQUnpvYgAyPNGVIHL_MIcUQU7BKU/sendMessage -d chat_id="-458684504" -d text="the job is successful"'
         }
      
         failure {
