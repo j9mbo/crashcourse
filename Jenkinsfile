@@ -20,7 +20,7 @@ pipeline {
       }
       stage('ansible') {
         steps { 
-          sh "echo waiting for ansible"
+          sh "ansible-playbook -K playbook.yml"
         
         }
       }
