@@ -21,7 +21,7 @@ pipeline {
       }
       stage('ansible') {
         steps { 
-          sh "echo you you"
+          sh "ansible-playbook playbook.yml"
         
         }
       }
