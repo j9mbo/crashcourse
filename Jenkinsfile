@@ -10,18 +10,14 @@ pipeline {
    stages {
       stage('terraform') {
         steps {
-            sh 'echo $SVC_ACCOUNT_KEY | base64 -d > keys.json'
-            sh 'echo $CERTIFICATE | base64 -d > cert.pem'
-            sh 'echo $CERTIFICATE_PRIV_KEY | base64 -d > privkey.pem'
-            sh "terraform init"
-            sh "terraform plan"
-            sh "terraform apply -auto-approve"
+         
+            sh "terraform destroy -auto-approve"
            
         }
       }
       stage('ansible') {
         steps { 
-          sh "ansible-playbook playbook.yml"
+          sh "echo lol"
         
         }
       }
