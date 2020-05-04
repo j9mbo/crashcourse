@@ -8,16 +8,20 @@ pipeline {
         SVC_ACCOUNT_KEY = credentials('terraform-auth')
                }
    stages {
-      stage('terraform') {
+      stage('provisioning required files') {
         steps {
             sh 'echo $SVC_ACCOUNT_KEY | base64 -d > keys.json'
             sh 'echo $CERTIFICATE | base64 -d > cert.pem'
             sh 'echo $CERTIFICATE_PRIV_KEY | base64 -d > privkey.pem'
+              }
+      }
+        stage('terraform') {
+          steps { 
             sh "terraform init"
             sh "terraform plan"
             sh "terraform apply -auto-approve"
             sh "sleep 20"
-           
+            
         }
       }
       stage('ansible') {
