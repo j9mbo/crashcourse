@@ -22,7 +22,8 @@ pipeline {
       }
       stage('ansible') {
         steps { 
-          sh "echo lol"
+          sh "gcloud compute instances list --format='table(EXTERNAL_IP)' > hosts"
+          sh "echo "$(tail -n +2 ip.txt)" > hosts"
         
         }
       }
