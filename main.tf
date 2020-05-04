@@ -177,7 +177,7 @@ resource "google_compute_instance_template" "api" {
   }
 
   metadata = {
-   ssh-keys = "vital.molnar:${file("~/.ssh/id_rsa.pub")}"
+   ssh-keys = "vital:${file("~/.ssh/id_rsa.pub")}"
   }
 
   service_account {
