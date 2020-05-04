@@ -15,7 +15,7 @@ pipeline {
             sh 'echo $CERTIFICATE_PRIV_KEY | base64 -d > privkey.pem'
             sh "terraform init"
             sh "terraform plan"
-            sh "terraform destroy -auto-approve"
+            sh "terraform apply -auto-approve"
             sh "sleep 5"
            
         }
