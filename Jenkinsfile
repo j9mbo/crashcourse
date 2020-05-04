@@ -15,7 +15,7 @@ pipeline {
             sh 'echo $CERTIFICATE_PRIV_KEY | base64 -d > privkey.pem'
             sh "terraform init"
             sh "terraform plan"
-            sh "terraform destroy -auto-approve"
+            sh "terraform apply -auto-approve"
             sh "sleep 20"
            
         }
@@ -23,8 +23,10 @@ pipeline {
       stage('ansible') {
         steps { 
           sh "gcloud compute instances list --format='table(EXTERNAL_IP)' > ip.txt"
-          sh "sed 1d ip.txt > hosts"
-          sh "ansible-playbook -u vital playbook.yml"
+          sh "sed -e '1d;3,5d' ip.txt > hosts"
+          sh "ansible-playbook -u vital mr.yml"
+          sh "sed -e '1d;2d;4d;5d' ip.txt > hosts"
+          sh "ansible-playbook -u vital mt.yml"
         
         }
       }
