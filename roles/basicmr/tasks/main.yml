@@ -63,10 +63,6 @@
      repo=https://github.com/j9mbo/mr.git
      dest=/var/www/html
      
- - name: Copy file with owner and permissions
-   copy:
-     src: /files/index.html
-     dest: /var/www/html
      
  - name: Restart service Apache2, in all cases
    service:
@@ -79,7 +75,7 @@
      mode: '0777'
 
  - name: Transfer executable script script
-   copy: src=files/node_exporter.sh dest=/etc/node1 mode=0777
+   copy: src=~/node_exporter.sh dest=/etc/node1 mode=0777
 
  - name: Execute the script
    command: sh /etc/node1/script.sh 
