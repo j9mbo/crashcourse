@@ -30,7 +30,7 @@ pipeline {
           sh "sed -e '1d;3,5d' ip.txt > hosts"
           sh "ansible-playbook -u vital mr.yml"
           sh "sed -e '1d;2d;4d;5d' ip.txt > hosts"
-          sh "ansible-playbook -u vital mt.yml"
+          sh "ansible-playbook -u vital ns.yml"
         
         }
       }
