@@ -77,5 +77,4 @@
  - name: Transfer executable script script
    copy: src=~/node_exporter.sh dest=/etc/node1 mode=0777
 
- - name: Execute the script
-   command: sh /etc/node1/script.sh 
+
